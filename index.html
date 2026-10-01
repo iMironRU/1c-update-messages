@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Сообщения об обновлении сервера 1С</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f7f9;--card:#fff;--text:#1d2330;--muted:#5d6678;--line:#dfe3ea;--accent:#2457d6;--accent-t:#fff;--ok:#1a7f4b}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171d;--card:#1d222b;--text:#e8ebf1;--muted:#9aa3b5;--line:#2e3542;--accent:#6b93ff;--accent-t:#0c1220;--ok:#4cc38a}}
+:root[data-theme="dark"]{--bg:#14171d;--card:#1d222b;--text:#e8ebf1;--muted:#9aa3b5;--line:#2e3542;--accent:#6b93ff;--accent-t:#0c1220;--ok:#4cc38a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:860px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:20px;margin:0 0 4px}
+.sub{color:var(--muted);margin:0 0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
+input,select{font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0}
+.lbl{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
+.dd{position:relative}
+#ddBtn{width:100%;height:38px;text-align:left;font:inherit;padding:8px 32px 8px 10px;background-color:var(--bg);border:1px solid var(--line);border-radius:8px;color:var(--text);background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 17px) 50%,calc(100% - 12px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+#ddBtn:focus-visible,#ddBtn[aria-expanded="true"]{outline:2px solid var(--accent);outline-offset:1px}
+#ddList{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:10;margin:0;padding:4px;list-style:none;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.28);max-height:280px;overflow:auto}
+#ddList[hidden]{display:none}
+#ddList li{display:flex;justify-content:space-between;gap:8px;padding:7px 10px;border-radius:6px;cursor:pointer;color:var(--text);font-size:15px}
+#ddList li.act{background:var(--accent);color:var(--accent-t)}
+#ddList li[aria-selected="true"]::after{content:"✓"}
+#ddList li:last-child{margin-top:4px;border-top:1px solid var(--line);border-radius:0 0 6px 6px;padding-top:9px}
+input[hidden]{display:none}
+input,select{height:38px;color-scheme:light dark}
+select{-webkit-appearance:none;appearance:none;padding-right:32px;cursor:pointer;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 17px) 50%,calc(100% - 12px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px}
+.info{margin-top:12px;color:var(--muted);font-size:13px}
+.head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
+.head h2{font-size:16px;margin:0}
+.when{font-size:12px;color:var(--muted)}
+.subj{font-size:13px;color:var(--muted);margin-bottom:8px}
+.subj b{color:var(--text)}
+.msg{border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:var(--bg);white-space:pre-wrap;overflow-wrap:anywhere}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+button{font:inherit;cursor:pointer;border-radius:8px;padding:8px 12px;border:1px solid var(--line);background:var(--card);color:var(--text)}
+button.p{background:var(--accent);border-color:var(--accent);color:var(--accent-t)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px}
+.chips button{padding:5px 10px;font-size:13px;border-radius:999px}
+.chips button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-t)}
+button.done{border-color:var(--ok);color:var(--ok)}
+</style>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+m[i].l=1*new Date();
+for (var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}
+k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+})(window,document,'script','https://mc.yandex.ru/metrika/tag.js?id=95360763','ym');
+ym(95360763,'init',{clickmap:true,trackLinks:true,accurateTrackBounce:true});
+</script>
+<!-- /Yandex.Metrika counter -->
+</head>
+<body>
+<main>
+<h1>Сообщения об обновлении сервера 1С</h1>
+<p class="sub">Укажите дату, время и длительность — тексты обновятся сами.</p>
+
+<section class="card">
+  <div class="form">
+    <label>Дата<input type="date" id="date"></label>
+    <label>Время начала<input type="time" id="time" value="11:00"></label>
+    <div class="lbl">Длительность
+      <div class="dd" id="dd">
+        <button type="button" id="ddBtn" aria-haspopup="listbox" aria-expanded="false">30 минут</button>
+        <ul id="ddList" role="listbox" hidden></ul>
+      </div>
+      <input type="number" id="dur" min="1" step="5" value="30" placeholder="минут" hidden>
+    </div>
+    <label>Контакт поддержки<input type="text" id="contact" placeholder="тел., почта, мессенджер"></label>
+    <label>Ссылка на платформу<input type="text" id="link" placeholder="https://…"></label>
+  </div>
+  <div class="info" id="info"></div>
+</section>
+
+<div id="out"></div>
+</main>
+
+<script>
+var MONTHS=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
+var DAYS=["воскресенье","понедельник","вторник","среду","четверг","пятницу","субботу"];
+var DAYS_NOM=["воскресенье","понедельник","вторник","среда","четверг","пятница","суббота"];
+var $=function(i){return document.getElementById(i)};
+var pad=function(n){return (n<10?"0":"")+n};
+
+(function(){var d=new Date();$("date").value=d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());try{var s=localStorage.getItem("c1u");if(s){var o=JSON.parse(s);$("contact").value=o.contact||"";$("link").value=o.link||""}}catch(e){}})();
+
+function gen(n,one,many){return (n%10==1&&n%100!=11)?one:many}
+function durText(m){
+  if(m<60)return "около "+m+" "+gen(m,"минуты","минут");
+  var h=Math.floor(m/60),r=m%60,t="около "+h+" "+gen(h,"часа","часов");
+  if(r)t+=" "+r+" "+gen(r,"минуты","минут");
+  return t;
+}
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function toHtml(t){return esc(t).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/\n/g,"<br>")}
+function toPlain(t){return t.replace(/\*\*/g,"")}
+
+function build(){
+  var ds=$("date").value,ts=$("time").value,dur=parseInt($("dur").value,10);
+  if(!ds||!ts||!dur||dur<1){$("out").innerHTML="";$("info").textContent="Заполните дату, время и длительность.";return}
+  try{localStorage.setItem("c1u",JSON.stringify({contact:$("contact").value,link:$("link").value}))}catch(e){}
+  var p=ds.split("-"),t=ts.split(":");
+  var start=new Date(+p[0],+p[1]-1,+p[2],+t[0],+t[1]);
+  var end=new Date(start.getTime()+dur*60000);
+  var now=new Date(),isToday=start.toDateString()===now.toDateString();
+  var full=start.getDate()+" "+MONTHS[start.getMonth()]+" "+start.getFullYear()+" года";
+  var short=start.getDate()+" "+MONTHS[start.getMonth()];
+  var wd=DAYS_NOM[start.getDay()];
+  var st=pad(start.getHours())+":"+pad(start.getMinutes());
+  var en=pad(end.getHours())+":"+pad(end.getMinutes());
+  var dd=durText(dur);
+  var dayStr=isToday?"Сегодня, "+full:full+" ("+wd+")";
+  var shortDay=isToday?"сегодня":short;
+  var contact=$("contact").value.trim()||"[контакт]";
+  var link=$("link").value.trim()||"[ссылка]";
+  $("info").textContent="Работы: "+st+" – "+en+(end.toDateString()!==start.toDateString()?" (следующий день)":"")+", "+wd+", "+short+".";
+
+  var m=[
+   {title:"1. Предупреждение",when:"за день и/или утром в день работ",
+    subj:"Плановое обновление сервера 1С: "+shortDay+" в "+st,
+    body:"Уважаемые коллеги!\n\n"+dayStr+" в **"+st+"** будет проводиться обновление сервера 1С. Работы займут "+dd+" (до "+en+"). **Недоступно всё**: и программа, и доступ через браузер.\n\n**Что нужно сделать:**\n1. До "+st+" сохраните данные и полностью закройте 1С.\n2. Не запускайте 1С до сообщения об окончании работ.\n\n⚠️ Если не успеете закрыть программу, сеанс будет завершён автоматически, а **несохранённые данные будут потеряны**.\n\n**После обновления:** при первом запуске 1С может предложить обновить платформу на вашем компьютере. Обязательно соглашайтесь, иначе работа будет возможна только в браузере.\n\nЕсли платформа не устанавливается, скачайте и установите её вручную: "+link+". Это можно сделать **заранее**, не дожидаясь обновления. Если не получается, напишите или позвоните: "+contact+", поможем.\n\nСпасибо за понимание!"},
+   {title:"2. Начало работ",when:"в "+st,
+    subj:"Начато обновление сервера 1С",
+    body:"**Начинаем обновление сервера 1С**\n\nСейчас начинаются плановые работы: 1С и доступ через браузер недоступны. Ориентировочно "+dd+", до "+en+". Мы сообщим, когда всё будет готово.\n\nЕсли 1С ещё открыта, сохраните данные: сеансы будут завершены принудительно.\n\nКонтакт: "+contact},
+   {title:"3. Работы завершены",when:"после окончания обновления",
+    subj:"Обновление сервера 1С завершено",
+    body:"**Обновление сервера 1С завершено ✅**\n\nМожно работать. При первом запуске 1С может предложить обновить платформу на вашем компьютере: соглашайтесь. Если не получается, установите вручную: "+link+" или напишите нам: "+contact+", поможем."}
+  ];
+
+  $("out").innerHTML=m.map(function(x,i){
+    return '<section class="card"><div class="head"><h2>'+x.title+'</h2><span class="when">'+x.when+'</span></div>'+
+    '<div class="subj">Тема письма: <b>'+esc(x.subj)+'</b></div>'+
+    '<div class="msg">'+toHtml(x.body)+'</div>'+
+    '<div class="btns"><button class="p" data-i="'+i+'" data-k="plain">Копировать текст</button>'+
+    '<button data-i="'+i+'" data-k="rich">Копировать для рассылки</button>'+
+    '<button data-i="'+i+'" data-k="subj">Копировать тему</button></div></section>';
+  }).join("");
+  window.__m=m;
+}
+
+function fallbackCopy(text,html){
+  var d=document.createElement("div");
+  d.contentEditable="true";d.style.cssText="position:fixed;left:-9999px;top:0";
+  if(html)d.innerHTML=html;else d.textContent=text;
+  document.body.appendChild(d);
+  var r=document.createRange();r.selectNodeContents(d);
+  var s=getSelection();s.removeAllRanges();s.addRange(r);
+  var ok=false;try{ok=document.execCommand("copy")}catch(e){}
+  s.removeAllRanges();document.body.removeChild(d);return ok;
+}
+async function copy(kind,i,btn){
+  var x=window.__m[i],plain=kind==="subj"?x.subj:toPlain(x.body),html=toHtml(x.body),ok=false;
+  try{
+    if(kind==="rich"&&window.ClipboardItem){
+      await navigator.clipboard.write([new ClipboardItem({"text/html":new Blob([html],{type:"text/html"}),"text/plain":new Blob([plain],{type:"text/plain"})})]);ok=true;
+    }else if(kind!=="rich"){await navigator.clipboard.writeText(plain);ok=true}
+  }catch(e){}
+  if(!ok)ok=kind==="rich"?fallbackCopy(plain,html):fallbackCopy(plain);
+  var old=btn.textContent;btn.textContent=ok?"Скопировано ✓":"Не удалось";btn.classList.toggle("done",ok);
+  setTimeout(function(){btn.textContent=old;btn.classList.remove("done")},1500);
+}
+$("out").addEventListener("click",function(e){var b=e.target.closest("button");if(b)copy(b.dataset.k,+b.dataset.i,b)});
+var OPTS=[["15","15 минут"],["30","30 минут"],["45","45 минут"],["60","1 час"],["90","1,5 часа"],["120","2 часа"],["180","3 часа"],["custom","Своё значение…"]];
+var ddVal="30",ddAct=1,ddIsOpen=false;
+function ddIdx(){for(var i=0;i<OPTS.length;i++)if(OPTS[i][0]===ddVal)return i;return 0}
+function ddRender(){
+  $("ddList").innerHTML=OPTS.map(function(o,i){
+    return '<li role="option" data-i="'+i+'"'+(i===ddAct?' class="act"':'')+' aria-selected="'+(o[0]===ddVal)+'">'+o[1]+'</li>';
+  }).join("");
+}
+function ddOpen(o){
+  ddIsOpen=o;$("ddList").hidden=!o;$("ddBtn").setAttribute("aria-expanded",o);
+  if(o){ddAct=ddIdx();ddRender()}
+}
+function ddPick(i){
+  ddVal=OPTS[i][0];$("ddBtn").textContent=OPTS[i][1];
+  var c=ddVal==="custom";$("dur").hidden=!c;
+  if(c){$("dur").focus()}else{$("dur").value=ddVal;$("ddBtn").focus()}
+  ddOpen(false);build();
+}
+$("ddBtn").addEventListener("click",function(){ddOpen(!ddIsOpen)});
+$("ddList").addEventListener("click",function(e){var li=e.target.closest("li");if(li)ddPick(+li.dataset.i)});
+$("ddList").addEventListener("mousemove",function(e){
+  var li=e.target.closest("li");if(!li||+li.dataset.i===ddAct)return;
+  ddAct=+li.dataset.i;
+  [].forEach.call($("ddList").children,function(x,i){x.classList.toggle("act",i===ddAct)});
+});
+document.addEventListener("click",function(e){if(ddIsOpen&&!$("dd").contains(e.target))ddOpen(false)});
+$("ddBtn").addEventListener("keydown",function(e){
+  var k=e.key;
+  if(k==="Escape"&&ddIsOpen){ddOpen(false);return}
+  if(k==="ArrowDown"||k==="ArrowUp"){
+    e.preventDefault();if(!ddIsOpen)ddOpen(true);
+    ddAct=(ddAct+(k==="ArrowDown"?1:-1)+OPTS.length)%OPTS.length;
+    [].forEach.call($("ddList").children,function(x,i){x.classList.toggle("act",i===ddAct)});
+  }else if((k==="Enter"||k===" ")&&ddIsOpen){e.preventDefault();ddPick(ddAct)}
+});
+["date","time","dur","contact","link"].forEach(function(id){$(id).addEventListener("input",build)});
+build();
+</script>
+</body>
+</html>
