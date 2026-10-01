@@ -37,6 +37,7 @@ input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px}
 .head h2{font-size:16px;margin:0}
 .when{font-size:12px;color:var(--muted)}
 .subj{font-size:13px;color:var(--muted);margin-bottom:8px}
+.head .subj{margin-bottom:0}
 .subj b{color:var(--text)}
 .msg{border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:var(--bg);white-space:pre-wrap;overflow-wrap:anywhere}
 .btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
@@ -90,7 +91,17 @@ var DAYS_NOM=["воскресенье","понедельник","вторник"
 var $=function(i){return document.getElementById(i)};
 var pad=function(n){return (n<10?"0":"")+n};
 
-(function(){var d=new Date();$("date").value=d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());try{var s=localStorage.getItem("c1u");if(s){var o=JSON.parse(s);$("contact").value=o.contact||"";$("link").value=o.link||""}}catch(e){}})();
+(function(){
+  // Подставляем ближайшее начало часа, но не раньше чем через полчаса:
+  // в 12:30 предлагаем 14:00, а не 13:00 — чтобы осталось время предупредить.
+  // Если перевалило за полночь, дата тоже уезжает на следующий день.
+  var d=new Date(Date.now()+30*60000);
+  d.setMinutes(0,0,0);
+  d.setHours(d.getHours()+1);
+  $("date").value=d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+  $("time").value=pad(d.getHours())+":"+pad(d.getMinutes());
+  try{var s=localStorage.getItem("c1u");if(s){var o=JSON.parse(s);$("contact").value=o.contact||"";$("link").value=o.link||""}}catch(e){}
+})();
 
 function gen(n,one,many){return (n%10==1&&n%100!=11)?one:many}
 function durText(m){
@@ -146,15 +157,25 @@ function build(){
     body:"**Обновление сервера 1С завершено ✅**\n\nМожно работать. При первом запуске 1С может предложить обновить платформу на вашем компьютере: соглашайтесь. "+how3}
   ];
 
-  $("out").innerHTML=m.map(function(x,i){
-    return '<section class="card"><div class="head"><h2>'+x.title+'</h2><span class="when">'+x.when+'</span></div>'+
-    '<div class="subj">Тема письма: <b>'+esc(x.subj)+'</b></div>'+
-    '<div class="msg">'+toHtml(x.body)+'</div>'+
-    '<div class="btns"><button class="p" data-i="'+i+'" data-k="plain">Копировать текст</button>'+
-    '<button data-i="'+i+'" data-k="rich">Копировать для рассылки</button>'+
-    '<button data-i="'+i+'" data-k="subj">Копировать тему</button></div></section>';
-  }).join("");
   window.__m=m;
+  render();
+}
+
+// Сообщения показываем по одному: заголовок вкладки и так виден,
+// поэтому в панели его не дублируем — только тема письма и когда слать.
+var tab=0;
+function render(){
+  var m=window.__m,x=m[tab];
+  $("out").innerHTML=
+    '<div class="chips" role="tablist">'+m.map(function(y,i){
+      return '<button type="button" role="tab" data-t="'+i+'" aria-selected="'+(i===tab)+'"'+(i===tab?' class="on"':'')+'>'+esc(y.title)+'</button>';
+    }).join("")+'</div>'+
+    '<section class="card" role="tabpanel">'+
+    '<div class="head"><div class="subj">Тема письма: <b>'+esc(x.subj)+'</b></div><span class="when">'+esc(x.when)+'</span></div>'+
+    '<div class="msg">'+toHtml(x.body)+'</div>'+
+    '<div class="btns"><button class="p" data-i="'+tab+'" data-k="plain">Копировать текст</button>'+
+    '<button data-i="'+tab+'" data-k="rich">Копировать для рассылки</button>'+
+    '<button data-i="'+tab+'" data-k="subj">Копировать тему</button></div></section>';
 }
 
 function fallbackCopy(text,html){
@@ -178,7 +199,20 @@ async function copy(kind,i,btn){
   var old=btn.textContent;btn.textContent=ok?"Скопировано ✓":"Не удалось";btn.classList.toggle("done",ok);
   setTimeout(function(){btn.textContent=old;btn.classList.remove("done")},1500);
 }
-$("out").addEventListener("click",function(e){var b=e.target.closest("button");if(b)copy(b.dataset.k,+b.dataset.i,b)});
+$("out").addEventListener("click",function(e){
+  var b=e.target.closest("button");if(!b)return;
+  if(b.dataset.t!==undefined){tab=+b.dataset.t;render();return}
+  copy(b.dataset.k,+b.dataset.i,b);
+});
+$("out").addEventListener("keydown",function(e){
+  if(!e.target.closest('[role="tab"]'))return;
+  var k=e.key,n=window.__m.length;
+  if(k!=="ArrowRight"&&k!=="ArrowLeft")return;
+  e.preventDefault();
+  tab=(tab+(k==="ArrowRight"?1:-1)+n)%n;
+  render();
+  $("out").querySelector('[role="tab"][aria-selected="true"]').focus();
+});
 var OPTS=[["15","15 минут"],["30","30 минут"],["45","45 минут"],["60","1 час"],["90","1,5 часа"],["120","2 часа"],["180","3 часа"],["custom","Своё значение…"]];
 var ddVal="30",ddAct=1,ddIsOpen=false;
 function ddIdx(){for(var i=0;i<OPTS.length;i++)if(OPTS[i][0]===ddVal)return i;return 0}
