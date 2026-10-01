@@ -40,12 +40,26 @@ input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px}
 .head .subj{margin-bottom:0}
 .subj b{color:var(--text)}
 .msg{border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:var(--bg);white-space:pre-wrap;overflow-wrap:anywhere}
-.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
 button{font:inherit;cursor:pointer;border-radius:8px;padding:8px 12px;border:1px solid var(--line);background:var(--card);color:var(--text)}
 button.p{background:var(--accent);border-color:var(--accent);color:var(--accent-t)}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px}
-.chips button{padding:5px 10px;font-size:13px;border-radius:999px}
-.chips button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-t)}
+/* Вкладки: активная «срастается» с панелью — уезжает на 1px вниз и прячет
+   её верхнюю границу своей нижней того же цвета, что фон карточки. */
+.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;position:relative;z-index:1}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:none;margin-bottom:-1px;padding:9px 14px;font-size:14px;white-space:nowrap;
+  color:var(--muted);background:transparent;border:1px solid transparent;border-radius:10px 10px 0 0}
+.tabs button:hover{color:var(--text)}
+.tabs button.on{color:var(--text);font-weight:600;background:var(--card);
+  border-color:var(--line);border-bottom-color:var(--card)}
+.tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.panel{border-top-left-radius:0}
+/* Переключатель «Подробно/Кратко» — прижат вправо, в одну группу с кнопками */
+.seg{margin-left:auto;display:flex}
+.seg button{padding:6px 10px;font-size:13px;border-radius:0}
+.seg button:first-child{border-radius:8px 0 0 8px}
+.seg button:last-child{border-radius:0 8px 8px 0;margin-left:-1px}
+.seg button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-t)}
 button.done{border-color:var(--ok);color:var(--ok)}
 </style>
 <!-- Yandex.Metrika counter -->
@@ -139,6 +153,8 @@ function build(){
          : hasC       ? "Если платформа не устанавливается, напишите или позвоните: "+contact+", поможем."
                       : "Если платформа не устанавливается — напишите мне, помогу.";
   var how2=hasC ? "Контакт: "+contact : "Если что-то срочное — напишите мне.";
+  var ask=hasC ? "Вопросы: "+contact+"." : "Если что — напишите мне.";
+  var shortDayCap=shortDay.charAt(0).toUpperCase()+shortDay.slice(1);
   var how3=hasL&&hasC ? "Если не получается, установите вручную: "+link+" или напишите нам: "+contact+", поможем."
          : hasL       ? "Если не получается, установите вручную: "+link+" — или напишите мне, помогу."
          : hasC       ? "Если не получается, напишите или позвоните: "+contact+", поможем."
@@ -148,13 +164,16 @@ function build(){
   var m=[
    {title:"1. Предупреждение",when:"за день и/или утром в день работ",
     subj:"Плановое обновление сервера 1С: "+shortDay+" в "+st,
-    body:"Уважаемые коллеги!\n\n"+dayStr+" в **"+st+"** будет проводиться обновление сервера 1С. Работы займут "+dd+" (до "+en+"). **Недоступно всё**: и программа, и доступ через браузер.\n\n**Что нужно сделать:**\n1. До "+st+" сохраните данные и полностью закройте 1С.\n2. Не запускайте 1С до сообщения об окончании работ.\n\n⚠️ Если не успеете закрыть программу, сеанс будет завершён автоматически, а **несохранённые данные будут потеряны**.\n\n**После обновления:** при первом запуске 1С может предложить обновить платформу на вашем компьютере. Обязательно соглашайтесь, иначе работа будет возможна только в браузере.\n\n"+how1+"\n\nСпасибо за понимание!"},
+    body:"Уважаемые коллеги!\n\n"+dayStr+" в **"+st+"** будет проводиться обновление сервера 1С. Работы займут "+dd+" (до "+en+"). **Недоступно всё**: и программа, и доступ через браузер.\n\n**Что нужно сделать:**\n1. До "+st+" сохраните данные и полностью закройте 1С.\n2. Не запускайте 1С до сообщения об окончании работ.\n\n⚠️ Если не успеете закрыть программу, сеанс будет завершён автоматически, а **несохранённые данные будут потеряны**.\n\n**После обновления:** при первом запуске 1С может предложить обновить платформу на вашем компьютере. Обязательно соглашайтесь, иначе работа будет возможна только в браузере.\n\n"+how1+"\n\nСпасибо за понимание!",
+    short:"**"+shortDayCap+" в "+st+"** — обновление сервера 1С, "+dd+" (до "+en+"). Не будет работать ни программа, ни браузер.\n\n**Закройте 1С до "+st+" и не открывайте**, пока не придёт сообщение об окончании: несохранённые данные иначе пропадут.\n\n"+ask},
    {title:"2. Начало работ",when:"в "+st,
     subj:"Начато обновление сервера 1С",
-    body:"**Начинаем обновление сервера 1С**\n\nСейчас начинаются плановые работы: 1С и доступ через браузер недоступны. Ориентировочно "+dd+", до "+en+". Мы сообщим, когда всё будет готово.\n\nЕсли 1С ещё открыта, сохраните данные: сеансы будут завершены принудительно.\n\n"+how2},
+    body:"**Начинаем обновление сервера 1С**\n\nСейчас начинаются плановые работы: 1С и доступ через браузер недоступны. Ориентировочно "+dd+", до "+en+". Мы сообщим, когда всё будет готово.\n\nЕсли 1С ещё открыта, сохраните данные: сеансы будут завершены принудительно.\n\n"+how2,
+    short:"**Начали обновление 1С.** Программа и браузер недоступны "+dd+", до "+en+". Сообщим, когда закончим."},
    {title:"3. Работы завершены",when:"после окончания обновления",
     subj:"Обновление сервера 1С завершено",
-    body:"**Обновление сервера 1С завершено ✅**\n\nМожно работать. При первом запуске 1С может предложить обновить платформу на вашем компьютере: соглашайтесь. "+how3}
+    body:"**Обновление сервера 1С завершено ✅**\n\nМожно работать. При первом запуске 1С может предложить обновить платформу на вашем компьютере: соглашайтесь. "+how3,
+    short:"**Обновление 1С завершено ✅** Можно работать. Если при запуске предложит обновить платформу — соглашайтесь.\n\n"+ask}
   ];
 
   window.__m=m;
@@ -163,19 +182,22 @@ function build(){
 
 // Сообщения показываем по одному: заголовок вкладки и так виден,
 // поэтому в панели его не дублируем — только тема письма и когда слать.
-var tab=0;
+var tab=0,mode="full";
+function bodyOf(x){return mode==="short"&&x.short?x.short:x.body}
 function render(){
   var m=window.__m,x=m[tab];
   $("out").innerHTML=
-    '<div class="chips" role="tablist">'+m.map(function(y,i){
+    '<div class="tabs" role="tablist">'+m.map(function(y,i){
       return '<button type="button" role="tab" data-t="'+i+'" aria-selected="'+(i===tab)+'"'+(i===tab?' class="on"':'')+'>'+esc(y.title)+'</button>';
     }).join("")+'</div>'+
-    '<section class="card" role="tabpanel">'+
+    '<section class="card panel" role="tabpanel">'+
     '<div class="head"><div class="subj">Тема письма: <b>'+esc(x.subj)+'</b></div><span class="when">'+esc(x.when)+'</span></div>'+
-    '<div class="msg">'+toHtml(x.body)+'</div>'+
     '<div class="btns"><button class="p" data-i="'+tab+'" data-k="plain">Копировать текст</button>'+
     '<button data-i="'+tab+'" data-k="rich">Копировать для рассылки</button>'+
-    '<button data-i="'+tab+'" data-k="subj">Копировать тему</button></div></section>';
+    '<button data-i="'+tab+'" data-k="subj">Копировать тему</button>'+
+    '<span class="seg"><button data-v="full"'+(mode==="full"?' class="on"':'')+'>Подробно</button>'+
+    '<button data-v="short"'+(mode==="short"?' class="on"':'')+'>Кратко</button></span></div>'+
+    '<div class="msg">'+toHtml(bodyOf(x))+'</div></section>';
 }
 
 function fallbackCopy(text,html){
@@ -189,7 +211,7 @@ function fallbackCopy(text,html){
   s.removeAllRanges();document.body.removeChild(d);return ok;
 }
 async function copy(kind,i,btn){
-  var x=window.__m[i],plain=kind==="subj"?x.subj:toPlain(x.body),html=toHtml(x.body),ok=false;
+  var x=window.__m[i],t=bodyOf(x),plain=kind==="subj"?x.subj:toPlain(t),html=toHtml(t),ok=false;
   try{
     if(kind==="rich"&&window.ClipboardItem){
       await navigator.clipboard.write([new ClipboardItem({"text/html":new Blob([html],{type:"text/html"}),"text/plain":new Blob([plain],{type:"text/plain"})})]);ok=true;
@@ -202,6 +224,7 @@ async function copy(kind,i,btn){
 $("out").addEventListener("click",function(e){
   var b=e.target.closest("button");if(!b)return;
   if(b.dataset.t!==undefined){tab=+b.dataset.t;render();return}
+  if(b.dataset.v!==undefined){mode=b.dataset.v;render();return}
   copy(b.dataset.k,+b.dataset.i,b);
 });
 $("out").addEventListener("keydown",function(e){
